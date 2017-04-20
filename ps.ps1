@@ -37,8 +37,15 @@ function choco {
     Start-Choco $Args
 }
 
+function docker {
+    docker.exe $Args
+    if ($LASTEXITCODE) {
+        throw "$(@('docker')+$Args | ConvertTo-Json -Compress) failed with exit code $LASTEXITCODE"
+    }
+}
+
 cd c:/vagrant
-
+$script = Resolve-Path $script
+cd (Split-Path $script -Parent)
 Write-Host "Running $script..."
-
-. "./$script"
+. $script

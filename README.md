@@ -18,3 +18,5 @@ vagrant up
 ```
 
 **NB** On my machine this takes about 1h to complete... but YMMV!
+
+At the end of the provision the [examples](examples/) are run.
