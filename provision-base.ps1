@@ -70,6 +70,9 @@ New-Item -Force -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image 
 # install Visual Studio Code.
 choco install -y visualstudiocode
 
+# install 7-Zip
+choco install -y 7zip
+
 # install Google Chrome.
 # see https://www.chromium.org/administrators/configuring-other-preferences
 choco install -y googlechrome
