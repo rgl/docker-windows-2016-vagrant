@@ -16,16 +16,21 @@ Remove-Item $archivePath
 # add docker to the current process PATH.
 $env:PATH += ";$env:ProgramFiles\docker"
 
-# install the docker service.
-dockerd `
-    --label os=windows `
-    --host 0.0.0.0:2375 `
-    --host npipe:////./pipe/docker_engine `
-    --register-service
-
-# configure the service to always restart on failure.
+# install the docker service and configure it to always restart on failure.
+dockerd --register-service
 sc.exe failure docker reset= 0 actions= restart/1000/restart/1000/restart/1000
 
+# configure docker through a configuration file.
+# see https://docs.docker.com/engine/reference/commandline/dockerd/#windows-configuration-file
+$config = @{
+    'debug' = $false
+    'labels' = @('os=windows')
+    'hosts' = @('tcp://0.0.0.0:2375', 'npipe:////./pipe/docker_engine')
+}
+mkdir -Force "$env:ProgramData\docker\config"
+Set-Content -Encoding ascii "$env:ProgramData\docker\config\daemon.json" ($config | ConvertTo-Json)
+
+# start docker.
 Start-Service docker
 
 function docker {
