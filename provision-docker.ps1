@@ -1,10 +1,10 @@
 # see https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon
-# see https://github.com/docker/docker/releases/tag/v17.04.0-ce
+# see https://github.com/moby/moby/releases/tag/v17.05.0-ce-rc2
 
 # download install the docker binaries.
-$archiveName = 'docker-17.04.0-ce.zip'
+$archiveName = 'docker-17.05.0-ce-rc2.zip'
 $archivePath = "$env:TEMP\$archiveName"
-Invoke-WebRequest https://get.docker.com/builds/Windows/x86_64/$archiveName -UseBasicParsing -OutFile $archivePath
+Invoke-WebRequest https://test.docker.com/builds/Windows/x86_64/$archiveName -UseBasicParsing -OutFile $archivePath
 Expand-Archive $archivePath -DestinationPath $env:ProgramFiles
 Remove-Item $archivePath
 
