@@ -43,18 +43,6 @@ function docker {
 Write-Host 'Pulling the microsoft/nanoserver container image...'
 docker pull microsoft/nanoserver
 
-Write-Host 'Running a script inside microsoft/nanoserver...'
-docker run --rm microsoft/nanoserver PowerShell @'
-Write-Output 'Operating System version:'
-Get-ComputerInfo -Property WindowsProductName,WindowsInstallationType,OsVersion,BuildVersion,WindowsBuildLabEx | Format-List
-
-Write-Output 'PowerShell version:'
-$PSVersionTable.GetEnumerator() | Sort-Object Name | Format-Table -AutoSize
-
-Write-Output 'Machine IP addresses:'
-Get-NetAdapter | Get-NetIPConfiguration | ForEach-Object {$_.IPv4Address.IPAddress} | Sort-Object
-'@
-
 Write-Host 'Pulling and running microsoft/dotnet-samples:dotnetapp-nanoserver...'
 docker run --rm microsoft/dotnet-samples:dotnetapp-nanoserver
 
