@@ -1,13 +1,13 @@
 Write-Output 'building the container...'
 Push-Location hello-world
-docker build -t go-hello-world .
+time {docker build -t go-hello-world .}
 Pop-Location
 
 Write-Output 'getting the container history...'
 docker history go-hello-world
 
 Write-Output 'running the container in background...'
-docker run --rm -d -p 80:8888 --name go-hello-world go-hello-world
+time {docker run --rm -d -p 80:8888 --name go-hello-world go-hello-world}
 
 # NB on Windows we cannot access the published 80 port at the http://localhost:80
 #    address, we have to directly access the container IP adress.
