@@ -1,34 +1,7 @@
-# install go.
-choco install -y golang
-
-# setup the current process environment.
-$env:GOROOT = 'C:\tools\go'
-$env:PATH += ";$env:GOROOT\bin"
-
-# setup the Machine environment.
-[Environment]::SetEnvironmentVariable('GOROOT', $env:GOROOT, 'Machine')
-[Environment]::SetEnvironmentVariable(
-    'PATH',
-    "$([Environment]::GetEnvironmentVariable('PATH', 'Machine'));$env:GOROOT\bin",
-    'Machine')
-
-# wrap the go command in order to terminate this script when it fails.
-function go {
-    go.exe $Args
-    if ($LASTEXITCODE) {
-        throw "$(@('go')+$Args | ConvertTo-Json -Compress) failed with exit code $LASTEXITCODE"
-    }
-}
-
-Write-Output 'Go env:'
-go env
-
-Write-Output 'building the binaries...'
-cd hello-world
-go build -v
-
 Write-Output 'building the container...'
+Push-Location hello-world
 docker build -t go-hello-world .
+Pop-Location
 
 Write-Output 'getting the container history...'
 docker history go-hello-world
