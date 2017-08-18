@@ -3,10 +3,10 @@
 # see https://github.com/docker/docker-ce/releases/tag/v17.06.0-ce
 
 # download install the docker binaries.
-$archiveName = 'docker-17.06.0-ce.zip'
+$archiveName = 'docker-17.06.1-ce.tgz' # NB this is really a zip. see https://github.com/docker/for-win/issues/1015
 $archiveUrl = "https://download.docker.com/win/static/stable/x86_64/$archiveName"
-$archiveHash = '3d27360a11a3a627aac9c6d73eb32d4a9b6dcca6bcb4b2c7a5fcd9d2e0ec6c82'
-$archivePath = "$env:TEMP\$archiveName"
+$archiveHash = 'c5f662cc4a4b73c84fc6eecea32f363932c47ea2246026f9c9247783cc4c8f97'
+$archivePath = "$env:TEMP\$archiveName.zip"
 Invoke-WebRequest $archiveUrl -UseBasicParsing -OutFile $archivePath
 $archiveActualHash = (Get-FileHash $archivePath -Algorithm SHA256).Hash
 if ($archiveActualHash -ne $archiveHash) {
