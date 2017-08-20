@@ -30,11 +30,30 @@ RUN cd $env:TMP; `
     Write-Host 'Expanding...'; `
     Expand-Archive local-service-account.zip .; `
     Remove-Item local-service-account.zip;
+RUN cd $env:TMP; `
+    $url = 'https://artifacts.elastic.co/downloads/beats/winlogbeat/winlogbeat-5.5.2-windows-x86_64.zip'; `
+    $sha256 = '4f2c84903b35f350d7a027d34b0b061fdd1217c246aafcdc56dbe9a97614ad79'; `
+    Write-Host ('Downloading winlogbeat from {0}...' -f $url); `
+    Invoke-WebRequest -Uri $url -OutFile winlogbeat.zip; `
+    Write-Host ('Verifying sha256 ({0})...' -f $sha256); `
+    if ((Get-FileHash winlogbeat.zip -Algorithm sha256).Hash -ne $sha256) { `
+        Write-Host 'FAILED!'; `
+        Exit 1; `
+    }; `
+    Write-Host 'Expanding...'; `
+    Expand-Archive winlogbeat.zip .; `
+    Write-Host 'Removing unneeded files...'; `
+    Remove-Item winlogbeat.zip; `
+    Copy-Item winlogbeat-*/winlogbeat.exe .; `
+    Remove-Item -Recurse winlogbeat-*;
 
 FROM microsoft/nanoserver
 SHELL ["C:/Windows/System32/WindowsPowerShell/v1.0/PowerShell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 COPY --from=builder /Users/ContainerAdministrator/AppData/Local/Temp/pgsql /pgsql/
+RUN regsvr32.exe C:/pgsql/lib/pgevent.dll
 COPY --from=builder /Users/ContainerAdministrator/AppData/Local/Temp/local-service-account.exe /init/
+COPY --from=builder /Users/ContainerAdministrator/AppData/Local/Temp/winlogbeat.exe /init/winlogbeat/
+COPY winlogbeat.yml /init/winlogbeat/
 COPY init /init/
 EXPOSE 5432
 ENV PGPASSWORD="postgres"

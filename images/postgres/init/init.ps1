@@ -54,6 +54,8 @@ if (!(Get-Service -ErrorAction SilentlyContinue $serviceName)) {
 }
 
 if (!(Test-Path "$env:PGDATA\PG_VERSION")) {
+    # see https://www.postgresql.org/docs/9.6/static/creating-cluster.html
+    Write-Host "Creating the Database Cluster in $env:PGDATA..."
     mkdir -Force $env:PGDATA | Out-Null
     $acl = New-Object System.Security.AccessControl.DirectorySecurity
     $acl.SetAccessRuleProtection($true, $false)
@@ -72,9 +74,6 @@ if (!(Test-Path "$env:PGDATA\PG_VERSION")) {
                     'Allow')))
     }
     Set-Acl $env:PGDATA $acl
-
-    # see https://www.postgresql.org/docs/9.6/static/creating-cluster.html
-    Write-Host "Creating the Database Cluster in $env:PGDATA..."
     initdb `
         --username=$env:PGUSER `
         --auth-host=trust `
@@ -101,13 +100,11 @@ host    all             all             ::/0                    md5
     | Out-File -Append -Encoding ascii "$env:PGDATA\pg_hba.conf"
 }
 
-Write-Host 'Starting...'
+Write-Output "Starting the $serviceName service..."
 Start-Service $serviceName
-Write-Host "Running $(psql -t -c 'select version()' postgres)..."
 
 Write-Host "Setting the $env:PGUSER user password..."
 psql -c "alter role $env:PGUSER login password '$env:PGPASSWORD'" postgres
 
-while ($true) {
-    Start-Sleep -Seconds 2
-}
+Write-Host "Running $((psql -t -c 'select version()' postgres | Out-String).Trim())..."
+cd /init/winlogbeat;./winlogbeat.exe
