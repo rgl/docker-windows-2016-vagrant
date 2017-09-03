@@ -67,6 +67,11 @@ New-Item -Force -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image 
         -Name Debugger `
         -Value '"C:\Program Files\ApplicationReplacer\ApplicationReplacer.exe" -- "C:\Program Files\Notepad++\notepad++.exe"'
 
+# install useful system tools.
+choco install -y procexp
+choco install -y procmon
+choco install -y winobj
+
 # install Visual Studio Code.
 choco install -y visualstudiocode
 
