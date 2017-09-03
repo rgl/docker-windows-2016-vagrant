@@ -23,7 +23,7 @@ At the end of the provision the [examples](examples/) are run.
 
 # Graceful Container Shutdown
 
-**Windows containers cannot be gracefully shutdown,** either there is no shutdown notification or they are forcefully terminated after a while.
+**Windows containers cannot be gracefully shutdown,** either there is no shutdown notification or they are forcefully terminated after a while. Check the [moby issue 25982](https://github.com/moby/moby/issues/25982) for progress.
 
 The next table describes whether a `docker stop --time 30 <container>` will graceful shutdown a container that is running a [console](https://github.com/rgl/graceful-terminating-console-application-windows/), [gui](https://github.com/rgl/graceful-terminating-gui-application-windows/), or [service](https://github.com/rgl/graceful-terminating-windows-service/) app.
 
