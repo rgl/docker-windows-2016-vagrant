@@ -20,3 +20,26 @@ vagrant up
 **NB** On my machine this takes about 1h to complete... but YMMV!
 
 At the end of the provision the [examples](examples/) are run.
+
+# Graceful Container Shutdown
+
+**Windows containers cannot be gracefully shutdown,** either there is no shutdown notification or they are forcefully terminated after a while.
+
+The next table describes whether a `docker stop --time 30 <container>` will graceful shutdown a container that is running a [console](https://github.com/rgl/graceful-terminating-console-application-windows/), [gui](https://github.com/rgl/graceful-terminating-gui-application-windows/), or [service](https://github.com/rgl/graceful-terminating-windows-service/) app.
+
+| base image        | app     | behaviour                                                              |
+| ----------------- | ------- | ---------------------------------------------------------------------- |
+| nanoserver        | console | does not receive the shutdown notification                             |
+| windowsservercore | console | receives the shutdown notification but is killed after about 5 seconds |
+| nanoserver        | gui     | fails to run `RegisterClass` (there's no GUI support in nano)          |
+| windowsservercore | gui     | receives the shutdown notification but is killed after about 5 seconds |
+| nanoserver        | service | does not receive the shutdown notification                             |
+| windowsservercore | service | does not receive the shutdown notification                             |
+
+You can launch these example containers from host as:
+
+```bash
+vagrant execute -c '/vagrant/ps.ps1 examples/graceful-terminating-console-application/run.ps1'
+vagrant execute -c '/vagrant/ps.ps1 examples/graceful-terminating-gui-application/run.ps1'
+vagrant execute -c '/vagrant/ps.ps1 examples/graceful-terminating-windows-service/run.ps1'
+```
