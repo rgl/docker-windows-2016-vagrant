@@ -3,7 +3,7 @@ $serviceName = 'graceful-terminating-windows-service'
 $serviceUsername = 'SYSTEM'
 
 Write-Host "Creating the $serviceName service..."
-$result = sc.exe create $serviceName binPath= "$PWD/graceful-terminating-windows-service.exe 10 c:/host"
+$result = sc.exe create $serviceName binPath= "$PWD/graceful-terminating-windows-service.exe 600 c:/host t"
 if ($result -ne '[SC] CreateService SUCCESS') {
     throw "sc.exe sidtype failed with $result"
 }

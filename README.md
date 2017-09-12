@@ -25,7 +25,7 @@ At the end of the provision the [examples](examples/) are run.
 
 **Windows containers cannot be gracefully shutdown,** either there is no shutdown notification or they are forcefully terminated after a while. Check the [moby issue 25982](https://github.com/moby/moby/issues/25982) for progress.
 
-The next table describes whether a `docker stop --time 30 <container>` will graceful shutdown a container that is running a [console](https://github.com/rgl/graceful-terminating-console-application-windows/), [gui](https://github.com/rgl/graceful-terminating-gui-application-windows/), or [service](https://github.com/rgl/graceful-terminating-windows-service/) app.
+The next table describes whether a `docker stop --time 600 <container>` will graceful shutdown a container that is running a [console](https://github.com/rgl/graceful-terminating-console-application-windows/), [gui](https://github.com/rgl/graceful-terminating-gui-application-windows/), or [service](https://github.com/rgl/graceful-terminating-windows-service/) app.
 
 | base image        | app     | behaviour                                                              |
 | ----------------- | ------- | ---------------------------------------------------------------------- |
@@ -33,8 +33,10 @@ The next table describes whether a `docker stop --time 30 <container>` will grac
 | windowsservercore | console | receives the shutdown notification but is killed after about 5 seconds |
 | nanoserver        | gui     | fails to run `RegisterClass` (there's no GUI support in nano)          |
 | windowsservercore | gui     | receives the shutdown notification but is killed after about 5 seconds |
-| nanoserver        | service | does not receive the shutdown notification                             |
-| windowsservercore | service | does not receive the shutdown notification                             |
+| nanoserver        | service | only receives the **pre** shutdown notification but is killed after about 195 seconds |
+| windowsservercore | service | only receives the **pre** shutdown notification but is killed after about 195 seconds |
+
+**NG** setting `WaitToKillServiceTimeout` (e.g. `Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control -Name WaitToKillServiceTimeout -Value '450000'`) does not have any effect on extending the kill service timeout.
 
 You can launch these example containers from host as:
 

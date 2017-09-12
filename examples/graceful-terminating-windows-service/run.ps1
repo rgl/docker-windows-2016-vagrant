@@ -15,7 +15,7 @@ time {docker run -d --volume "${dataPath}:C:\host" --name graceful-terminating-w
 Write-Output 'sleeping a bit before stopping the container...'
 Start-Sleep -Seconds 15
 Write-Output 'stopping the container...'
-docker stop --time 30 graceful-terminating-windows-service
+docker stop --time 600 graceful-terminating-windows-service
 
 Write-Output 'getting the container logs...'
 docker logs graceful-terminating-windows-service | ForEach-Object {"    $_"}
